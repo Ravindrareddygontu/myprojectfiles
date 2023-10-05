@@ -1,0 +1,17 @@
+Monitoring User and Application Metrics using Prometheus
+Introduction
+This document describes how to monitor user and application metrics using Prometheus in Python. The script leverages the `prometheus_client` library to expose metrics such as the number of users in the system and the active and previously used applications.
+Prerequisites
+Ensure you have the following installed:
+1. Python 3.x
+2. Prometheus
+3. The `prometheus_client`, `win32com.client`, `pygetwindow`, and `getpass` Python packages
+Installation
+1. Install Python packages:
+pip install prometheus_client pywin32 pygetwindow
+2. Download and set up Prometheus from the official website.
+How to Use
+1. Run the Python script.
+2. Open a browser and navigate to `http://localhost:8001` to see the metrics.
+3. Configure Prometheus to scrape metrics from this endpoint.
+4. You can visualize these metrics using Grafana or the Prometheus UI.
