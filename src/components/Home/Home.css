@@ -1,0 +1,61 @@
+
+
+
+/* Main Content */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background: linear-gradient(45deg, #f5f5f5, #ddd); /* upgraded to a gradient background for a modern look */
+    min-height: 100vh; /* take full viewport height */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* add a deeper shadow for depth */
+}
+
+/* Header */
+.header h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* added text shadow for depth */
+}
+
+.header p {
+    font-size: 1.3em;
+    color: #666; /* darker text color */
+}
+
+/* Button Group */
+.btn-group {
+    margin-top: 20px;
+    display: flex;
+    gap: 30px; /* spacing between buttons */
+}
+
+/* Buttons */
+.btn {
+    padding: 15px 25px; /* Increased padding for better appearance */
+    font-size: 1.3em; /* Increased font size for better readability */
+    border: none;
+    border-radius: 15px; /* Increased border radius for more rounded buttons */
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Added transition for box-shadow */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Added deeper shadow for depth */
+}
+
+.registered {
+    background-color: #007BFF; /* Changed to a more vibrant shade of blue */
+    color: white;
+}
+
+.not-registered {
+    background-color: #FF4136; /* Changed to a more vibrant shade of red */
+    color: white;
+}
+
+/* Hover effects */
+.hvr-grow-shadow:hover {
+    transform: scale(1.15); /* enlarge the button a bit more */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* add a deeper shadow */
+}

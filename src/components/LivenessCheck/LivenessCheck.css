@@ -1,0 +1,26 @@
+.liveness-check-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* .liveness-video {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    width: 850;
+    height: 450;
+} */
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Responsive styling */
+/* @media (max-width: 800px) {
+    .liveness-video {
+        width: 100%;
+    }
+} */
