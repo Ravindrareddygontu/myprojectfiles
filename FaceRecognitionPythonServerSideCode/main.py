@@ -2,15 +2,17 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from mongo_client import get_users_collections_and_fs
-from compare_faces_for_recognition import compare_faces  # Assuming these modules are compatible with FastAPI
+from compare_faces_for_recognition import compare_faces  
 import base64
 import traceback
 import datetime
 from fastapi import Request
-from token_validation import check_and_update_token
+from middlewares import TokenMiddleware, I18nMiddleware
 
 
 app = FastAPI()
+app.add_middleware(TokenMiddleware)
+app.add_middleware(I18nMiddleware)
 
 # CORS Configuration
 origins = [
@@ -40,11 +42,6 @@ users_collection, fs = get_users_collections_and_fs()
 async def check_email(data: dict, request: Request):  # Directly getting the 'email' from request parameters
 
     try:
-        check_token = check_and_update_token(request)
-        if check_token == 400:
-            raise Exception('session has expired')
-        logging.info(f"Received email: {data['email']}")
-        # print(request.headers, request.json)
         if data['email'] not in [user['email'] for user in users_collection.find()]:
             raise ValueError('Invalid Email,Not in the database')
         
@@ -56,20 +53,16 @@ async def check_email(data: dict, request: Request):  # Directly getting the 'em
 
     except ValueError as ve:
         logging.error(ve)
-        logging.error(traceback.format_exc())  # Add traceback log
+        logging.error(traceback.format_exc())  
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         logging.error(f"An error occurred: {str(e)}")
-        logging.error(traceback.format_exc())  # Add traceback log
+        logging.error(traceback.format_exc()) 
         raise HTTPException(status_code=500, detail="An unexpected error occurred.")
 
-@app.post("/uploads")
-async def uploads(data: dict, request: Request):
+@app.post("/validate_and_register")
+async def validate_and_register(data: dict, request: Request):
     try:
-        check_token = check_and_update_token(request)
-        if check_token == 400:
-            raise Exception('session has expired')
-        
         email = data.get('email', None)
         if not email:
             raise ValueError("No email provided.")
@@ -83,14 +76,12 @@ async def uploads(data: dict, request: Request):
             video_id = fs.put(base64.b64decode(video))
             users_collection.update_one({'email': email}, {'$set': {'registered_video_id': video_id, 'registered': True}})
 
+        #we compare with the current uploading photo and with photo present in organization(ex:in database)
         if photo:
             photo = base64.b64decode(photo)
             result = compare_faces(photo, email)
-            print(result)
             registering_photo_id = fs.put(photo)
-            print('res', registering_photo_id)
             users_collection.update_one({'email': email}, {'$set': {'registered_photo_id': registering_photo_id}})
-            print(email)
 
             if not result['detected']:
                 raise ValueError('Face is not Detected Properly')
@@ -119,24 +110,19 @@ async def save_photo(data: dict, request: Request):
     The endpoint expects a JSON payload with keys 'smiled_image' and 'eye_blinked_image'.
     It saves the provided images to MongoDB.
     """
-    check_token = check_and_update_token(request)
-
-    if check_token == 400:
-        raise HTTPException(status_code=400, detail="session has expired")
-    
     email = data.get('email', None)
     eye_blinked_image = data.get('eye_blinked_image', None)
     smiled_image = data.get('smiled_image', None)
-
-
-    
     if not email:
+        logging.info('email is not provided in the request')
         raise HTTPException(status_code=400, detail="Email not provided")
 
-    if not smiled_image or not eye_blinked_image:
+    if not smiled_image and not eye_blinked_image:
+        logging.info('smiled or eye blinked photo is not provided in the request')
         raise HTTPException(status_code=400, detail='smiled or eyeblinked photo not provided')
     
     if smiled_image:
+        print('smiled has been came')
         try:
             smiled_image_id = fs.put(base64.b64decode(smiled_image))
             update_data = {
@@ -155,6 +141,7 @@ async def save_photo(data: dict, request: Request):
 
     
     if eye_blinked_image:
+        print('eye blinked has been came')
         try:
             eye_blinked_image_id = fs.put(base64.b64decode(eye_blinked_image))
             update_data = {
@@ -182,9 +169,6 @@ async def get_photo(data: dict, request: Request):
     The endpoint expects a JSON payload with keys 'original_image', 'smiled_image', and 'eye_blinked_image'.
     Depending on the provided keys, it fetches the corresponding images from MongoDB, encodes them to base64, and returns them.
     """
-    check_token = check_and_update_token(request)
-    if check_token == 400:
-        raise HTTPException(status_code=400, detail="session has expired")
     
     email = data.get('email', None)
     if not email:

@@ -1,0 +1,49 @@
+/* Reset for list styles */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Base styling for the navbar container */
+.navbar {
+    width: 100%;
+    background: linear-gradient(90deg, #0077b6, #00b4d8); /* Gradient background */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+    border-radius: 0 0 10px 10px; /* Rounded bottom edges */
+}
+
+/* Styling the brand logo */
+.brand-logo {
+    color: #ffffff;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px; /* Spaced-out letters */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Text shadow for depth */
+}
+
+/* Styling the navigation links */
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links li {
+    padding: 5px 10px; /* Padding for better click area */
+    cursor: pointer;
+    color: #ffffff;
+    border-radius: 5px; /* Rounded corners for each link */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.nav-links li:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Slight white background on hover */
+    color: #f0f0f0; /* Brighter color on hover */
+}
